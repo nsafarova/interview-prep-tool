@@ -19,7 +19,8 @@ Interview prep notes end up scattered across tabs, docs, and screenshots. This p
 - Four note cards per company
 - Interview date and status in the sidebar
 - AI research: one click collects website, LinkedIn page, what the company does, products, competitors, and latest news using web search
-- Notes saved in your browser, no account or server
+- Optional accounts with email and password, and notes that sync across devices
+- Notes saved in your browser when accounts are off
 - Export and import as a JSON backup
 
 ## Run it
@@ -27,6 +28,18 @@ Interview prep notes end up scattered across tabs, docs, and screenshots. This p
 No install needed. Download the repo and open `index.html` in a browser.
 
 To host it free with GitHub Pages: Settings, Pages, deploy from the `main` branch root.
+
+## Accounts and sync (optional)
+
+Sign in and sign up run on Supabase, so each person's notes sync across devices. Leave `config.js` empty and the app works without accounts, saving notes in the browser only.
+
+1. Create a free project at supabase.com.
+2. In the SQL editor, run everything in `supabase/schema.sql`. It creates one table and locks each row to its owner.
+3. In Project Settings, then API, copy the Project URL and the anon public key into `config.js`. The anon key is safe to publish because row level security protects the data. Never put the service role key anywhere in this repo.
+4. In Authentication, then URL Configuration, set the Site URL to your deployed address so confirmation emails link back to the app.
+5. Commit and push. Vercel redeploys.
+
+Notes made before signing up are carried into the new account the first time you sign in. Your Anthropic API key stays on each device and is never synced.
 
 ## AI research setup
 
@@ -47,6 +60,7 @@ Everything stays in your browser's local storage. Nothing is sent anywhere excep
 - Tags and filters by interview stage
 - Calendar reminders for interview dates
 - Shareable read only view
+- Password reset page
 
 ## License
 

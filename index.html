@@ -7,6 +7,28 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="authScreen" class="auth" hidden>
+    <div class="auth-card">
+      <div class="titlebar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="url">my-interview-prep.app</span>
+      </div>
+      <form id="authForm" class="auth-body">
+        <h1 id="authTitle">Welcome back</h1>
+        <p class="note">Sign in to keep your company research synced across devices.</p>
+        <label>Email
+          <input type="email" id="email" required autocomplete="email">
+        </label>
+        <label>Password
+          <input type="password" id="password" required autocomplete="current-password">
+        </label>
+        <p id="authMsg" class="status" hidden></p>
+        <button type="submit" id="authSubmit" class="ghost primary">Sign in</button>
+        <p class="switch"><span id="authSwitchText">New here?</span> <button type="button" id="authSwitch" class="link">Create an account</button></p>
+      </form>
+    </div>
+  </div>
+
   <div class="window">
     <div class="titlebar">
       <span class="dot"></span><span class="dot"></span><span class="dot"></span>
@@ -28,6 +50,12 @@
           <button id="importBtn" class="ghost">Import</button>
           <button id="settingsBtn" class="ghost" title="AI settings">Settings</button>
           <input id="importFile" type="file" accept="application/json" hidden>
+        </div>
+
+        <div id="account" class="account" hidden>
+          <span id="userEmail" class="account-email"></span>
+          <span id="syncState" class="account-sync"></span>
+          <button id="signOutBtn" class="ghost" type="button">Sign out</button>
         </div>
       </aside>
 
@@ -104,6 +132,8 @@
     </form>
   </dialog>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

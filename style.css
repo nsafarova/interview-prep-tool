@@ -82,3 +82,20 @@ dialog h2 { margin: 0 0 6px; font-size: 18px; }
 dialog label { display: block; font-size: 13px; margin-top: 14px; }
 dialog input { width: 100%; margin-top: 6px; padding: 9px 12px; border: 2px solid var(--ink); border-radius: 12px; font-size: 14px; }
 .dialog-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; flex-wrap: wrap; }
+
+/* Sign in and sign up */
+[hidden] { display: none !important; }
+.auth { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 0; }
+.auth-card { width: 100%; max-width: 420px; border: 2px solid var(--ink); border-radius: 22px; overflow: hidden; background: #fff; }
+.auth-body { padding: 24px; display: grid; gap: 12px; }
+.auth-body h1 { font-size: 22px; }
+.auth-body label { display: block; font-size: 13px; }
+.auth-body input { width: 100%; margin-top: 6px; padding: 10px 12px; border: 2px solid var(--ink); border-radius: 12px; font-size: 14px; }
+.auth-body .note { margin: 0; }
+.auth-body .status { margin: 0; }
+.auth-body button.primary { padding: 10px 14px; font-size: 14px; font-weight: 600; }
+.switch { font-size: 13px; margin: 4px 0 0; text-align: center; }
+button.link { border: 0; background: none; padding: 0; font-size: 13px; font-weight: 600; text-decoration: underline; cursor: pointer; color: var(--ink); }
+.account { margin-top: 14px; padding-top: 14px; border-top: 2px dashed #d8d8d0; display: grid; gap: 6px; font-size: 12px; }
+.account-email { font-weight: 600; word-break: break-all; }
+.account-sync { color: var(--muted); }
