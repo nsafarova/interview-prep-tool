@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interview Prep Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="window">
+    <div class="titlebar">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <span class="url">my-interview-prep.app</span>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <label class="label" for="newCompany">Company</label>
+        <form id="addForm">
+          <input id="newCompany" placeholder="Type a company name" autocomplete="off" required>
+        </form>
+
+        <div class="label sub">Saved companies</div>
+        <ul id="companyList" class="company-list"></ul>
+
+        <div class="sidebar-footer">
+          <button id="exportBtn" class="ghost">Export</button>
+          <button id="importBtn" class="ghost">Import</button>
+          <button id="settingsBtn" class="ghost" title="AI settings">Settings</button>
+          <input id="importFile" type="file" accept="application/json" hidden>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div id="empty" class="empty">Add a company to start your research notes.</div>
+
+        <section id="detail" hidden>
+          <header class="detail-header">
+            <h1 id="companyName"></h1>
+            <div class="meta">
+              <label>Interview
+                <input type="date" id="interviewDate">
+              </label>
+              <label class="check"><input type="checkbox" id="doneBox"> Done</label>
+              <button id="researchBtn" class="ghost primary">Research with AI</button>
+              <button id="deleteBtn" class="ghost danger">Delete</button>
+            </div>
+          </header>
+
+          <p id="status" class="status" hidden></p>
+
+          <div class="card overview" id="overview" hidden>
+            <span class="tag">Overview</span>
+            <p id="aboutText" class="about"></p>
+            <div class="links">
+              <a id="websiteLink" target="_blank" rel="noopener noreferrer" hidden>Website</a>
+              <a id="linkedinLink" target="_blank" rel="noopener noreferrer" hidden>LinkedIn</a>
+            </div>
+            <p class="note">AI generated. Please verify before your interview.</p>
+          </div>
+
+          <div class="grid">
+            <div class="card" data-field="products">
+              <span class="tag">Products</span>
+              <ul class="items"></ul>
+              <form class="add"><input placeholder="Add a note" autocomplete="off"></form>
+            </div>
+            <div class="card" data-field="competitors">
+              <span class="tag">Competitors</span>
+              <ul class="items"></ul>
+              <form class="add"><input placeholder="Add a note" autocomplete="off"></form>
+            </div>
+            <div class="card" data-field="news">
+              <span class="tag">Recent news</span>
+              <ul class="items"></ul>
+              <form class="add"><input placeholder="Add a note" autocomplete="off"></form>
+            </div>
+            <div class="card" data-field="questions">
+              <span class="tag">Questions to ask</span>
+              <ul class="items"></ul>
+              <form class="add"><input placeholder="Add a question" autocomplete="off"></form>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="settingsDialog">
+    <form method="dialog" id="settingsForm">
+      <h2>AI settings</h2>
+      <p class="note">Research uses your own Anthropic API key. It is stored only in this browser and sent only to Anthropic.</p>
+      <label>API key
+        <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
+      </label>
+      <label>Model
+        <input type="text" id="modelName" placeholder="claude-sonnet-5-5" autocomplete="off">
+      </label>
+      <div class="dialog-actions">
+        <button type="button" id="clearKey" class="ghost danger">Remove key</button>
+        <button type="button" id="cancelSettings" class="ghost">Cancel</button>
+        <button type="submit" class="ghost primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
