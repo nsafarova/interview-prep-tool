@@ -50,4 +50,4 @@ Everything stays in your browser's local storage. Nothing is sent anywhere excep
 
 ## License
 
-MIT
+Apache 2.0
