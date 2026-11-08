@@ -55,6 +55,7 @@
         <div id="account" class="account" hidden>
           <span id="userEmail" class="account-email"></span>
           <span id="syncState" class="account-sync"></span>
+          <button id="connectBtn" class="ghost" type="button">Connect Claude</button>
           <button id="signOutBtn" class="ghost" type="button">Sign out</button>
         </div>
       </aside>
@@ -130,6 +131,28 @@
         <button type="submit" class="ghost primary">Save</button>
       </div>
     </form>
+  </dialog>
+
+  <dialog id="connectDialog">
+    <h2>Connect Claude</h2>
+    <p class="note">Let Claude research companies with its own web search and save the results here. It uses your own Claude plan, free or paid, and needs no API key.</p>
+    <p id="connectInfo" class="note"></p>
+    <div id="linkBox" class="linkbox" hidden>
+      <input id="linkValue" type="text" readonly aria-label="Your connector link">
+      <button id="copyLink" class="ghost" type="button">Copy</button>
+    </div>
+    <p id="linkWarn" class="note" hidden>This link is shown only now. Treat it like a password, because anyone with it can read and change your dashboard.</p>
+    <ol class="steps">
+      <li>Create a link and copy it.</li>
+      <li>In Claude, open Customize, then Connectors, then Add custom connector.</li>
+      <li>Paste the link, name it Interview Prep, and save.</li>
+      <li>Ask Claude: "Research Brightwave for my interview and save it to my dashboard."</li>
+    </ol>
+    <div class="dialog-actions">
+      <button type="button" id="disconnectBtn" class="ghost danger" hidden>Disconnect</button>
+      <button type="button" id="closeConnect" class="ghost">Close</button>
+      <button type="button" id="createLink" class="ghost primary">Create connector link</button>
+    </div>
   </dialog>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>

@@ -9,6 +9,7 @@
   let user = null;
   let storageKey = KEY;
   let saveTimer = null;
+  let dirty = false;
   let state = load();
 
   const $ = (s, r = document) => r.querySelector(s);
@@ -325,17 +326,20 @@
   function scheduleCloudSave() {
     if (!sb || !user) return;
     clearTimeout(saveTimer);
+    dirty = true;
     setSyncLabel("Saving...");
     saveTimer = setTimeout(pushCloud, 800);
   }
 
   async function pushCloud() {
     if (!sb || !user) return;
+    const sent = JSON.stringify(state);
     const { error } = await sb.from("dashboards").upsert({
       user_id: user.id,
       data: state,
       updated_at: new Date().toISOString()
     });
+    if (!error && JSON.stringify(state) === sent) dirty = false;
     setSyncLabel(error ? "Not synced. Saved on this device." : "Synced");
   }
 
@@ -365,6 +369,27 @@
     save();
     render();
   }
+
+  // Pull in changes made elsewhere, such as notes Claude saved through the connector.
+  async function refreshFromCloud() {
+    if (!sb || !user || dirty) return;
+    const { data, error } = await sb
+      .from("dashboards")
+      .select("data")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (error || !data || !data.data || !Array.isArray(data.data.companies)) return;
+    if (dirty || JSON.stringify(data.data) === JSON.stringify(state)) return;
+    const keep = state.selected;
+    state = data.data;
+    if (keep && state.companies.some(c => c.id === keep)) state.selected = keep;
+    try { localStorage.setItem(storageKey, JSON.stringify(state)); } catch (e) {}
+    render();
+    setSyncLabel("Synced");
+  }
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshFromCloud(); });
+  window.addEventListener("focus", refreshFromCloud);
+  setInterval(() => { if (!document.hidden) refreshFromCloud(); }, 30000);
 
   function showAuth(show) {
     $("#authScreen").hidden = !show;
@@ -454,6 +479,73 @@
       await pushCloud();
       try { localStorage.removeItem(storageKey); } catch (e) {}
       if (sb) await sb.auth.signOut();
+    });
+
+    // ----- Connect Claude -----
+    async function refreshConnectStatus() {
+      const info = $("#connectInfo");
+      info.textContent = "Checking...";
+      const { data, error } = await sb.rpc("connector_status");
+      if (error) { info.textContent = "Could not check your connection. Please try again."; return; }
+      if (data && data.connected) {
+        const used = data.last_used_at
+          ? "Last used " + new Date(data.last_used_at).toLocaleString() + "."
+          : "Not used yet.";
+        info.textContent = "A connector link is active. " + used;
+        $("#createLink").textContent = "Make a new link";
+        $("#disconnectBtn").hidden = false;
+      } else {
+        info.textContent = "No connector link yet.";
+        $("#createLink").textContent = "Create connector link";
+        $("#disconnectBtn").hidden = true;
+      }
+    }
+    function hideLink() {
+      $("#linkBox").hidden = true;
+      $("#linkWarn").hidden = true;
+      $("#linkValue").value = "";
+    }
+    $("#connectBtn").addEventListener("click", () => {
+      hideLink();
+      $("#connectDialog").showModal();
+      refreshConnectStatus();
+    });
+    $("#closeConnect").addEventListener("click", () => {
+      hideLink();
+      $("#connectDialog").close();
+    });
+    $("#createLink").addEventListener("click", async () => {
+      const btn = $("#createLink");
+      if (btn.textContent === "Make a new link" &&
+          !confirm("Making a new link stops the old one from working. Continue?")) return;
+      btn.disabled = true;
+      const { data, error } = await sb.rpc("create_connector_token");
+      btn.disabled = false;
+      if (error || !data) {
+        $("#connectInfo").textContent = "Could not create a link. Please try again.";
+        return;
+      }
+      $("#linkValue").value = window.location.origin + "/api/mcp/" + data;
+      $("#linkBox").hidden = false;
+      $("#linkWarn").hidden = false;
+      refreshConnectStatus();
+    });
+    $("#copyLink").addEventListener("click", async () => {
+      const field = $("#linkValue");
+      field.select();
+      try {
+        await navigator.clipboard.writeText(field.value);
+        $("#copyLink").textContent = "Copied";
+        setTimeout(() => { $("#copyLink").textContent = "Copy"; }, 1500);
+      } catch (e) {
+        $("#copyLink").textContent = "Select and copy";
+      }
+    });
+    $("#disconnectBtn").addEventListener("click", async () => {
+      if (!confirm("Disconnect Claude? The current link will stop working.")) return;
+      await sb.rpc("revoke_connector_token");
+      hideLink();
+      refreshConnectStatus();
     });
 
     $(".window").hidden = true;

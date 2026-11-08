@@ -99,3 +99,10 @@ button.link { border: 0; background: none; padding: 0; font-size: 13px; font-wei
 .account { margin-top: 14px; padding-top: 14px; border-top: 2px dashed #d8d8d0; display: grid; gap: 6px; font-size: 12px; }
 .account-email { font-weight: 600; word-break: break-all; }
 .account-sync { color: var(--muted); }
+
+/* Connect Claude */
+.linkbox { display: flex; gap: 8px; margin-top: 12px; }
+.linkbox input { flex: 1; min-width: 0; margin-top: 0; font-size: 12px; }
+.steps { font-size: 13px; line-height: 1.5; padding-left: 20px; margin: 14px 0 0; }
+#connectDialog { max-width: 480px; }
+.account button { justify-self: start; }

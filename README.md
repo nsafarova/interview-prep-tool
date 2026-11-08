@@ -41,6 +41,22 @@ Sign in and sign up run on Supabase, so each person's notes sync across devices.
 
 Notes made before signing up are carried into the new account the first time you sign in. Your Anthropic API key stays on each device and is never synced.
 
+## Connect your own Claude (no API key)
+
+Signed in users can let their own Claude research companies and save the results into their dashboard. It uses their own Claude plan, free or paid, so there is no key to paste and no cost to the app owner. Claude free accounts can add one custom connector.
+
+1. Sign in, click Connect Claude, and create a connector link.
+2. In Claude, open Customize, then Connectors, then Add custom connector, and paste the link.
+3. Ask Claude: "Research Brightwave for my interview and save it to my dashboard."
+
+The connector is a small server function in `api/mcp/[token].js` with three tools: `list_companies`, `get_company`, and `save_research`. The page refreshes by itself to show what Claude saved.
+
+Security notes:
+- The link contains a long random secret. Treat it like a password. Anyone with it can read and change that user's dashboard. Making a new link or clicking Disconnect stops the old one.
+- Only a hash of the secret is stored in the database, and the server holds no secret keys.
+- Vercel request logs include the link path, so only share log access with people you trust.
+- A fuller version would use OAuth sign in instead of a secret link. That is on the roadmap.
+
 ## AI research setup
 
 1. Click Settings in the sidebar and paste your own Anthropic API key (get one at console.anthropic.com).
@@ -61,6 +77,7 @@ Everything stays in your browser's local storage. Nothing is sent anywhere excep
 - Calendar reminders for interview dates
 - Shareable read only view
 - Password reset page
+- OAuth sign in for the Claude connector instead of a secret link
 
 ## License
 
